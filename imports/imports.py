@@ -1,3 +1,9 @@
+"""
+Created by: Riley Preator
+Created on: 10/29/2023
+Last modified on: 10/29/2023
+"""
+
 
 """
 This module contains the necessary imports for the CompApexBannerBot project.
