@@ -19,7 +19,7 @@ rank : int
 team_points : int
     The number of points earned by the team this week by the power rankings.
 """
-class team_place:
+class TeamPlace:
 
     def __init__(self, team_name, team_abrev, rank, team_points):
         self.team_name = team_name
