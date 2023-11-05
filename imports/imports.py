@@ -18,3 +18,5 @@ import importlib
 import datetime
 import cv2
 import praw
+import requests
+from PIL import Image
