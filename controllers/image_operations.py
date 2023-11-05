@@ -1,19 +1,30 @@
+"""
+Created by: Riley Preator
+Created on: 11/05/2023
+Last modified on: 11/05/2023
+"""
+
 import cv2
 
 class ImageOperations:
 
     """
-        Creates a box on the given image using cv2.rectangle().
+    Creates a box on the given image using cv2.rectangle().
 
-        Args:
-            image (numpy.ndarray): The image to draw the box on.
-            pt1 (tuple): The (x, y) coordinates of the top-left corner of the box.
-            pt2 (tuple): The (x, y) coordinates of the bottom-right corner of the box.
-            color (tuple): The (B, G, R) color of the box.
-            thickness (int): The thickness of the box lines.
+    Args:
+        image : numpy.ndarray
+            The image to draw the box on.
+        pt1 : tuple
+            The (x, y) coordinates of the top-left corner of the box.
+        pt2 : tuple
+            The (x, y) coordinates of the bottom-right corner of the box.
+        color : tuple
+            The (B, G, R) color of the box.
+        thickness : int
+            The thickness of the box lines.
 
-        Returns:
-            numpy.ndarray: The image with the box drawn on it.
+    Returns:
+        numpy.ndarray: The image with the box drawn on it.
     """
     @staticmethod
     def create_box(image, pt1, pt2, color, thickness):
@@ -23,16 +34,20 @@ class ImageOperations:
 
 
     """
-        Adds an image to another image with coordinates using OpenCV.
+    Adds an image to another image with coordinates using OpenCV.
 
-        Args:
-            background_image (numpy.ndarray): The image to add the other image to.
-            foreground_image (numpy.ndarray): The image to be added to the background image.
-            x (int): The x-coordinate of the top-left corner of the foreground image.
-            y (int): The y-coordinate of the top-left corner of the foreground image.
+    Args:
+        background_image : numpy.ndarray
+            The image to add the other image to.
+        foreground_image numpy.ndarray
+            The image to be added to the background image.
+        x : int
+            The x-coordinate of the top-left corner of the foreground image.
+        y :int
+            The y-coordinate of the top-left corner of the foreground image.
 
-        Returns:
-            numpy.ndarray: The image with the foreground image added to it.
+    Returns:
+        numpy.ndarray: The image with the foreground image added to it.
     """
     @staticmethod
     def add_image(background_image, foreground_image, x, y):
