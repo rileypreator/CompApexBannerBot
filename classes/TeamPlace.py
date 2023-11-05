@@ -21,8 +21,9 @@ team_points : int
 """
 class TeamPlace:
 
-    def __init__(self, team_name, team_abrev, rank, team_points):
+    def __init__(self, team_name, team_abrv, rank, team_points, improvement):
         self.team_name = team_name
-        self.team_abrev = team_abrev
+        self.team_abrv = team_abrv
         self.rank = rank
         self.team_points = team_points
+        self.improvement = improvement
