@@ -15,7 +15,7 @@ def create_new_rankings(previous_rankings):
     with open("data/current_scores.json") as file:
         new_rankings = json.load(file)
 
-    create_team_objects(previous_rankings, new_rankings)
+    team_objects = create_team_objects(previous_rankings, new_rankings)
 
 def create_team_objects(previous_rankings, new_rankings):
     # create a list of team objects from the previous rankings
@@ -29,11 +29,12 @@ def create_team_objects(previous_rankings, new_rankings):
 
         # Make a team place object that can be used to track the team's placement and then create a Team object with that team place object
         team_place = TeamPlace(new_rankings_list[team_iterator]["team_name"], new_rankings_list[team_iterator]["team_name"], new_rankings_list[team_iterator]["placement"], new_rankings_list[team_iterator]["score"], improvement)
-        print(team_place.team_name, team_place.improvement)
-        # team_objects.append(Team(team, team.rank))
+        team_objects.append(Team(team_place))
+
+        # iterate through the loop with the team_iterator object
         team_iterator += 1
 
-    # return team_objects
+    return team_objects
 
 def calculate_improvement(previous_rankings, new_rankings_placement, team_name):
     previous_rankings_list = previous_rankings["teams"]

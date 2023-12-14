@@ -17,9 +17,8 @@ rank : int
     The teams given rank for the ranking
 """
 class Team:
-    def __init__(self, team_place: TeamPlace, rank):
+    def __init__(self, team_place: TeamPlace):
         self.team_place = team_place
-        self.rank = rank
 
         # Generate the team image
-        self.team_image = TeamImage(team_place.team_abrv, team_place.improvement, rank)
+        self.team_image = TeamImage(team_place.team_abrv, team_place.improvement, team_place.rank)
