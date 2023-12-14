@@ -9,7 +9,6 @@ Last modified on: 11/05/2023
 A class representing a team's placement in a competition.
 
 Attributes:
------------
 team_name : str
     The name of the team.
 team_abrev : str
