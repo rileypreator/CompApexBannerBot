@@ -4,8 +4,8 @@ Created on: 11/05/2023
 Last modified on: 11/05/2023
 """
 
-from TeamPlace import TeamPlace
-from TeamImage import TeamImage
+from classes.TeamPlace import TeamPlace
+from classes.TeamImage import TeamImage
 
 """
 A class representing a team in a competition.

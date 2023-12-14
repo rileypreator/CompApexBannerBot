@@ -7,7 +7,7 @@ Last modified on: 12/14/2023
 from classes.BannerImage import BannerImage
 from imports.imports import cv2
 from imports.imports import json
-
+from controllers.ranking_operations import create_new_rankings
 
 def run_main_operation():
     startup()
@@ -28,12 +28,7 @@ def get_previous_rankings():
     previous_rankings = []
     with open("data/previous_scores.json") as file:
         previous_rankings = json.load(file)
-    
+
     return previous_rankings
 
-def create_new_rankings(previous_rankings):
-    # create a new rankings list. For testing purposes. The teams will be generated just through the sample json right now
-    # However, once the API to receive the new rankings is created, this will be changed to use that API
 
-    
-    new_rankings = []
