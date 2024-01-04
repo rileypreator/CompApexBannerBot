@@ -34,16 +34,23 @@ class TeamImage:
         self.improvement = improvement
         self.rank = rank
 
-        self.image_path = ""
+        
+        self.image_path = "images/team_images/" + self.teamAbrv + "_logo.png"
 
         # Create the team image
-        self.generate_image()
+        self.team_placement_image = self.generate_image()
 
     def get_image_dimensions(self):
         with Image.open(self.image_path) as img:
             return img.size
 
-    def generate_image():
+    def generate_image(self):
         # TODO: Generate the image
-        print("Generating image...")
+        if (self.rank < 3):
+            print(self.get_image_dimensions())
+            print(self.teamAbrv)
 
+        return Image.open(self.image_path)
+
+
+        

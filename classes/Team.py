@@ -21,4 +21,4 @@ class Team:
         self.team_place = team_place
 
         # Generate the team image
-        self.team_image = TeamImage(team_place.team_abrv, team_place.improvement, team_place.rank)
+        self.team_image = TeamImage( team_place.team_abrv, team_place.improvement, team_place.rank)

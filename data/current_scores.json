@@ -1,7 +1,7 @@
 {
   "teams": [
-    {"team_name": "Team1", "placement": 1, "score": 1500},
-    {"team_name": "Team2", "placement": 2, "score": 1400},
+    {"team_name": "tsm", "placement": 1, "score": 1500},
+    {"team_name": "xset", "placement": 2, "score": 1400},
     {"team_name": "Team3", "placement": 3, "score": 1300},
     {"team_name": "Team4", "placement": 4, "score": 1200},
     {"team_name": "Team5", "placement": 5, "score": 1100},
