@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 10/29/2023
-Last modified on: 10/29/2023
+Last modified on: 1/18/2024
 """
 
 
@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import cv2
 import os
+import numpy as np
 from tkinter import *
 import importlib
 import datetime
