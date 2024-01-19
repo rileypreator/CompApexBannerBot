@@ -66,7 +66,7 @@ class TeamImage:
             raise FileNotFoundError(f"Image not found: {self.team_logo_image_path}")
 
         # Create brand new image with grey background
-        color = [215, 224, 218, 128]
+        color = [89, 88, 87, 255]
         blank_image = np.full((self.height, self.width, 4), color, np.uint8)
 
         # Add border to overall image
@@ -172,7 +172,10 @@ class TeamImage:
         font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
         position = (30, 30)
 
-        draw.text(position, str(self.rank), font=font, fill=(255, 255, 255, 255))
+        text = str(self.rank)
+        text_width = font.getmask(text).getbbox()[2]
+
+        draw.text((50 - int((text_width / 2)), 30), str(self.rank), font=font, fill=(255, 255, 255, 255))
 
         combined = Image.alpha_composite(pil_image, txt_image)
         final_image = np.array(combined)

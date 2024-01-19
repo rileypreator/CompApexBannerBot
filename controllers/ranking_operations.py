@@ -56,7 +56,7 @@ def calculate_improvement(previous_rankings, new_rankings_placement, team_name):
 
 def apply_team_objects(team_objects):
 
-    background_photo = cv2.imread("images/scaled_background.png", cv2.IMREAD_UNCHANGED)
+    background_photo = cv2.imread("images/scaled_background.png", 1)
     background_photo = cv2.cvtColor(background_photo, cv2.COLOR_RGB2RGBA)
 
     team_locations = [
@@ -100,9 +100,10 @@ def apply_subreddit_logo(banner):
     txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
     draw = ImageDraw.Draw(txt_image)
     font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
-    position = (455, 40)
-
-    draw.text(position, "r/CompetitiveApex" , font=font, fill=(255, 255, 255, 255))
+    position1 = (455, 40)
+    position2 = (2150, 40)
+    draw.text(position1, "r/CompetitiveApex" , font=font, fill=(255, 255, 255, 255))
+    draw.text(position2, "Power Rankings" , font=font, fill=(255, 255, 255, 255))
 
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
