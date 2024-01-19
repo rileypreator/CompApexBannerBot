@@ -1,12 +1,13 @@
 """
 Created by: Riley Preator
 Created on: 12/14/2023
-Last modified on: 12/14/2023
+Last modified on: 1/18/2024
 """
 from classes.TeamPlace import TeamPlace
 from classes.Team import Team
 from classes.TeamImage import TeamImage
 from imports.imports import json
+from imports.imports import cv2
 
 def create_new_rankings(previous_rankings):
     # create a new rankings list. For testing purposes. The teams will be generated just through the sample json right now
@@ -16,6 +17,8 @@ def create_new_rankings(previous_rankings):
         new_rankings = json.load(file)
 
     team_objects = create_team_objects(previous_rankings, new_rankings)
+
+    apply_team_objects(team_objects)
 
 def create_team_objects(previous_rankings, new_rankings):
     # create a list of team objects from the previous rankings
@@ -47,3 +50,39 @@ def calculate_improvement(previous_rankings, new_rankings_placement, team_name):
     # if previous ranking isn't found as they are not on the previous ranking, return new string
 
     return "NEW"
+
+def apply_team_objects(team_objects):
+
+    background_photo = cv2.imread("images/scaled_background.png", cv2.IMREAD_UNCHANGED)
+    background_photo = cv2.cvtColor(background_photo, cv2.COLOR_BGRA2RGBA)
+    team_locations = [
+        (1400, 10),
+        (1150, 10),
+        (1650, 10)
+    ]
+
+    team_iterator = 0
+    while team_iterator < 25:
+
+        # Set the first three images with static locations
+        if (team_iterator < 3):
+            x_offset = team_locations[team_iterator][0]
+            y_offset = team_locations[team_iterator][1]
+
+        # Set the next 11 images with a formula
+        elif (team_iterator >= 3 and team_iterator < 14):
+            x_offset = 231 + (team_iterator - 3) * 236
+            y_offset = 140
+
+        # Set the last 11 images with a formula
+        else:
+            x_offset = 231 + (team_iterator - 14) * 236
+            y_offset = 260
+
+        team_photo = team_objects[team_iterator].team_image.team_placement_image
+
+        background_photo[y_offset:y_offset+team_photo.shape[0], x_offset:x_offset+team_photo.shape[1]] = team_photo
+        print(team_iterator)
+        team_iterator += 1
+
+    cv2.imwrite("images/final_background.png", background_photo)

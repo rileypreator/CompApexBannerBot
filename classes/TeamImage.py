@@ -76,9 +76,9 @@ class TeamImage:
         # Add team logo to image
         team_image = self.add_team_image(placement_image)
 
-        # Resize the image if the team is in the top 3    
+        # Resize the image if the team is in the top 3
         if (self.rank > 3):
-            team_image = self.resize_image(team_image, 0.9)
+            team_image = self.resize_image(team_image, 0.89)
 
         cv2.imwrite("images/team_placement_images/" + self.teamAbrv + "_placement.png", team_image)
         return team_image
@@ -176,7 +176,7 @@ class TeamImage:
             final_image = cv2.cvtColor(final_image, cv2.COLOR_RGBA2BGRA)
 
         return final_image
-    
+
     def resize_image(self, image, percent):
         new_width = int(image.shape[1] * percent)
         new_height = int(image.shape[0] * percent)
