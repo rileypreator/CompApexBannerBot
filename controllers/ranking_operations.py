@@ -8,6 +8,8 @@ from classes.Team import Team
 from classes.TeamImage import TeamImage
 from imports.imports import json
 from imports.imports import cv2
+from imports.imports import Image, ImageFont, ImageDraw
+from imports.imports import np
 
 def create_new_rankings(previous_rankings):
     # create a new rankings list. For testing purposes. The teams will be generated just through the sample json right now
@@ -18,7 +20,8 @@ def create_new_rankings(previous_rankings):
 
     team_objects = create_team_objects(previous_rankings, new_rankings)
 
-    apply_team_objects(team_objects)
+    subreddit_banner = apply_team_objects(team_objects)
+    apply_subreddit_logo(subreddit_banner)
 
 def create_team_objects(previous_rankings, new_rankings):
     # create a list of team objects from the previous rankings
@@ -85,4 +88,24 @@ def apply_team_objects(team_objects):
         background_photo[y_offset:y_offset+team_photo.shape[0], x_offset:x_offset+team_photo.shape[1]] = team_photo
         team_iterator += 1
 
-    cv2.imwrite("images/final_background.png", background_photo)
+    return background_photo
+
+
+def apply_subreddit_logo(banner):
+    # Use pillow to import a custom font for the text
+
+
+    pil_image = Image.fromarray(banner)
+
+    txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
+    draw = ImageDraw.Draw(txt_image)
+    font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
+    position = (455, 40)
+
+    draw.text(position, "r/CompetitiveApex" , font=font, fill=(255, 255, 255, 255))
+
+    combined = Image.alpha_composite(pil_image, txt_image)
+    final_image = np.array(combined)
+
+    cv2.imwrite("images/final_background.png", final_image)
+    return final_image

@@ -167,9 +167,9 @@ class TeamImage:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
         pil_image = Image.fromarray(image)
 
-        txt_image = Image.new('RGBA', pil_image.size, (255, 255, 255, 0))
+        txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt_image)
-        font = ImageFont.truetype('data/Apex_Regular.otf', size=60)
+        font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
         position = (30, 30)
 
         draw.text(position, str(self.rank), font=font, fill=(255, 255, 255, 255))
@@ -199,9 +199,9 @@ class TeamImage:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
         pil_image = Image.fromarray(image)
 
-        txt_image = Image.new('RGBA', pil_image.size, (255, 255, 255, 0))
+        txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt_image)
-        font = ImageFont.truetype('data/Apex_Regular.otf', size=30)
+        font = ImageFont.truetype("data/Apex_Regular.otf", size=30)
 
         text = self.team_Abrv
         text_width = font.getmask(text).getbbox()[2]
