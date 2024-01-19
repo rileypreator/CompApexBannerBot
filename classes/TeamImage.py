@@ -70,7 +70,7 @@ class TeamImage:
         blank_image = np.full((self.height, self.width, 4), color, np.uint8)
 
         # Add border to overall image
-        rounded_image =  self.add_rounded_border(blank_image, 5, (255, 255, 255))
+        rounded_image =  self.add_rounded_border(blank_image, 2, (150, 149, 149))
 
         # Add placement to image
         placement_image = self.add_placement_text(rounded_image)
@@ -140,7 +140,7 @@ class TeamImage:
         background = image
 
         x_offset = 90
-        y_offset = 10
+        y_offset = 6
         # Calculate the overlay image region dimensions
         y1, y2 = y_offset, y_offset + overlay_image.shape[0]
         x1, x2 = x_offset, x_offset + overlay_image.shape[1]
@@ -170,12 +170,11 @@ class TeamImage:
         txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt_image)
         font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
-        position = (30, 30)
 
         text = str(self.rank)
         text_width = font.getmask(text).getbbox()[2]
 
-        draw.text((50 - int((text_width / 2)), 30), str(self.rank), font=font, fill=(255, 255, 255, 255))
+        draw.text((50 - int((text_width / 2)), 25), str(self.rank), font=font, fill=(255, 255, 255, 255))
 
         combined = Image.alpha_composite(pil_image, txt_image)
         final_image = np.array(combined)
