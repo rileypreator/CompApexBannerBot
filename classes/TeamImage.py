@@ -83,6 +83,7 @@ class TeamImage:
         placement_image = self.add_placement_text(rounded_image)
 
         # Add team logo to image
+
         team_image = self.add_team_image(placement_image)
 
         # Add team name to image if the team doesn't have a logo or if they are the top three, then add it with a color
@@ -106,6 +107,8 @@ class TeamImage:
 
 
         cv2.imwrite("images/team_placement_images/" + self.team_Abrv + "_placement.png", team_image)
+
+        print("Created team image for: " + self.team_Abrv)
         return team_image
 
 
@@ -165,8 +168,12 @@ class TeamImage:
         background_rgb = background[..., :3]
         alpha_background = background[..., 3] / 255.0
 
-        x_offset = 90
-        y_offset = 6
+        base_height, base_width = background.shape[:2]
+        overlay_height, overlay_width = overlay.shape[:2]
+
+        y_offset = (base_height - overlay_height) // 2
+        x_offset = 91 + ((100 - overlay_width) // 2)
+
         y1, y2 = y_offset, y_offset + overlay_rgb.shape[0]
         x1, x2 = x_offset, x_offset + overlay_rgb.shape[1]
 

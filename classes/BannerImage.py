@@ -8,7 +8,7 @@ from imports.imports import cv2, Image
 
 class BannerImage:
     def __init__(self):
-        self.image_path = "images/default_banner.png"
+        self.image_path = "images/actual_banner_background.png"
         self.width, self.height = self.get_image_dimensions()
         self.image = cv2.imread(self.image_path)
 
