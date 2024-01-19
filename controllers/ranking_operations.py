@@ -54,7 +54,8 @@ def calculate_improvement(previous_rankings, new_rankings_placement, team_name):
 def apply_team_objects(team_objects):
 
     background_photo = cv2.imread("images/scaled_background.png", cv2.IMREAD_UNCHANGED)
-    background_photo = cv2.cvtColor(background_photo, cv2.COLOR_BGRA2RGBA)
+    background_photo = cv2.cvtColor(background_photo, cv2.COLOR_RGB2RGBA)
+
     team_locations = [
         (1400, 10),
         (1150, 10),
