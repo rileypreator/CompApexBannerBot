@@ -4,10 +4,11 @@ Created on: 11/05/2023
 Last modified on: 1/18/2024
 """
 
-from imports.imports import Image
+from imports.imports import Image, ImageFont, ImageDraw
 from imports.imports import cv2
 from imports.imports import np
-import os
+from imports.imports import os
+
 
 """
 A class representing an image for a team in a competition.
@@ -23,7 +24,9 @@ Attributes:
     The improvement percentage of the team.
 - image_path : str
     The path to the image file.
-- team_placement_image : Image
+- team_logo_image : Numpy Array
+    The team's logo image.
+- team_placement_image : Numpy Array
     The final image for the team.
 
 Methods:
@@ -61,23 +64,24 @@ class TeamImage:
             raise FileNotFoundError(f"Image not found: {self.team_logo_image_path}")
 
         # Create brand new image with grey background
-        color = (215, 224, 218)
-        blank_image = np.full((self.height, self.width, 3), color, np.uint8)
-
-        # Add alpha layer to image
-        alpha_image = self.add_alpha_channel(blank_image)
+        color = [215, 224, 218, 128]
+        blank_image = np.full((self.height, self.width, 4), color, np.uint8)
 
         # Add border to overall image
-        rounded_image =  self.add_rounded_border(alpha_image, 5, (255, 255, 255))
+        rounded_image =  self.add_rounded_border(blank_image, 5, (255, 255, 255))
+
+        # Add placement to image
+        placement_image = self.add_placement_text(rounded_image)
 
         # Add team logo to image
-        team_image = self.add_team_image(rounded_image)
+        team_image = self.add_team_image(placement_image)
 
-
+        # DEBUGGING
         # cv2.imshow("Rounded Image", team_image)
         # cv2.waitKey()
         cv2.imwrite("images/team_placement_images/" + self.teamAbrv + "_placement.png", team_image)
-        return Image.open(self.team_logo_image_path)
+
+        return team_image
 
 
     # add a border around the initial image to make it so that the border is added with the color provided
@@ -126,16 +130,49 @@ class TeamImage:
     # add team logo to the image
     def add_team_image(self, image):
 
-        if (self.rank == 1):
-            x_offset = 95
-            y_offset = 15
-        elif (self.rank == 2 or 3):
-            x_offset = 95
-            y_offset = 15
-        else:
-            x_offset = 95
-            y_offset = 15
+        overlay_image = self.team_logo_image
+        background = image
 
-        image[y_offset: y_offset + self.team_logo_image.shape[0], x_offset: x_offset + self.team_logo_image.shape[1]] = self.team_logo_image
+        x_offset = 90
+        y_offset = 15
+        # Calculate the overlay image region dimensions
+        y1, y2 = y_offset, y_offset + overlay_image.shape[0]
+        x1, x2 = x_offset, x_offset + overlay_image.shape[1]
 
-        return image
+        # Check if the dimensions of the overlay exceed the background dimensions
+        if y2 > background.shape[0] or x2 > background.shape[1]:
+            raise ValueError("Overlay image exceeds background dimensions.")
+
+        # Extract the alpha channel from the overlay and create an alpha mask
+        alpha_s = overlay_image[:, :, 3] / 255.0
+        alpha_l = 1.0 - alpha_s
+
+        # Loop over the color channels
+        for c in range(0, 3):
+            background[y1:y2, x1:x2, c] = (alpha_s * overlay_image[:, :, c] + alpha_l * background[y1:y2, x1:x2, c])
+
+        return background
+
+    # add placement text to image
+    def add_placement_text(self, image):
+
+        # Use pillow to import a custom font for the text
+
+        if image.shape[2] < 4:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+        pil_image = Image.fromarray(image)
+
+        txt_image = Image.new('RGBA', pil_image.size, (255, 255, 255, 0))
+        draw = ImageDraw.Draw(txt_image)
+        font = ImageFont.truetype('data/Apex_Regular.otf', size=50)
+        position = (30, 40)
+
+        draw.text(position, str(self.rank), font=font, fill=(255, 255, 255, 255))
+
+        combined = Image.alpha_composite(pil_image, txt_image)
+        final_image = np.array(combined)
+
+        if final_image.shape[2] == 4:
+            final_image = cv2.cvtColor(final_image, cv2.COLOR_RGBA2BGRA)
+
+        return final_image

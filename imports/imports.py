@@ -21,4 +21,4 @@ import cv2
 import praw
 import requests
 import json
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
