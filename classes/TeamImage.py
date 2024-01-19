@@ -136,26 +136,26 @@ class TeamImage:
     # add team logo to the image
     def add_team_image(self, image):
 
-        overlay_image = self.team_logo_image
+        overlay = self.team_logo_image
         background = image
 
         x_offset = 90
         y_offset = 6
         # Calculate the overlay image region dimensions
-        y1, y2 = y_offset, y_offset + overlay_image.shape[0]
-        x1, x2 = x_offset, x_offset + overlay_image.shape[1]
+        y1, y2 = y_offset, y_offset + overlay.shape[0]
+        x1, x2 = x_offset, x_offset + overlay.shape[1]
 
         # Check if the dimensions of the overlay exceed the background dimensions
         if y2 > background.shape[0] or x2 > background.shape[1]:
             raise ValueError("Overlay image exceeds background dimensions.")
 
         # Extract the alpha channel from the overlay and create an alpha mask
-        alpha_s = overlay_image[:, :, 3] / 255.0
+        alpha_s = overlay[:, :, 3] / 255.0
         alpha_l = 1.0 - alpha_s
 
         # Loop over the color channels
         for c in range(0, 3):
-            background[y1:y2, x1:x2, c] = (alpha_s * overlay_image[:, :, c] + alpha_l * background[y1:y2, x1:x2, c])
+            background[y1:y2, x1:x2, c] = (alpha_s * overlay[:, :, c] + alpha_l * background[y1:y2, x1:x2, c])
 
         return background
 
