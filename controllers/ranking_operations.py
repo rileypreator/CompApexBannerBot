@@ -82,7 +82,6 @@ def apply_team_objects(team_objects):
         team_photo = team_objects[team_iterator].team_image.team_placement_image
 
         background_photo[y_offset:y_offset+team_photo.shape[0], x_offset:x_offset+team_photo.shape[1]] = team_photo
-        print(team_iterator)
         team_iterator += 1
 
     cv2.imwrite("images/final_background.png", background_photo)

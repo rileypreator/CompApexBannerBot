@@ -38,14 +38,16 @@ class TeamImage:
         self.width = 200
         self.height = 110
 
-        self.teamAbrv = teamAbrv
+        self.team_Abrv = teamAbrv
         self.improvement = improvement
         self.rank = rank
+        self.has_team_logo = True
 
         # Find the team logo path or default to the normal Apex logo
-        self.team_logo_image_path = "images/team_images/" + self.teamAbrv + "_logo.png"
+        self.team_logo_image_path = "images/team_images/" + self.team_Abrv + "_logo.png"
         if not os.path.exists(self.team_logo_image_path):
             self.team_logo_image_path = "images/team_images/default_team_logo.png"
+            self.has_team_logo = False
 
         self.team_logo_image = cv2.imread(self.team_logo_image_path, cv2.IMREAD_UNCHANGED)
 
@@ -76,11 +78,15 @@ class TeamImage:
         # Add team logo to image
         team_image = self.add_team_image(placement_image)
 
+        # Add team name to image if the team doesn't have a logo
+        if not self.has_team_logo:
+            team_image = self.add_team_name(team_image)
+
         # Resize the image if the team is in the top 3
         if (self.rank > 3):
             team_image = self.resize_image(team_image, 0.89)
 
-        cv2.imwrite("images/team_placement_images/" + self.teamAbrv + "_placement.png", team_image)
+        cv2.imwrite("images/team_placement_images/" + self.team_Abrv + "_placement.png", team_image)
         return team_image
 
 
@@ -155,7 +161,6 @@ class TeamImage:
 
     # add placement text to image
     def add_placement_text(self, image):
-
         # Use pillow to import a custom font for the text
 
         if image.shape[2] < 4:
@@ -186,3 +191,27 @@ class TeamImage:
         resized_image = cv2.resize(image, new_size)
 
         return resized_image
+
+    def add_team_name(self, image):
+        # Use pillow to import a custom font for the text
+
+        if image.shape[2] < 4:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+        pil_image = Image.fromarray(image)
+
+        txt_image = Image.new('RGBA', pil_image.size, (255, 255, 255, 0))
+        draw = ImageDraw.Draw(txt_image)
+        font = ImageFont.truetype('data/Apex_Regular.otf', size=30)
+
+        text = self.team_Abrv
+        text_width = font.getmask(text).getbbox()[2]
+
+        draw.text((140 - int((text_width / 2)), 55), text, font=font, fill=(255, 255, 255, 255))
+
+        combined = Image.alpha_composite(pil_image, txt_image)
+        final_image = np.array(combined)
+
+        if final_image.shape[2] == 4:
+            final_image = cv2.cvtColor(final_image, cv2.COLOR_RGBA2BGRA)
+
+        return final_image
