@@ -56,13 +56,13 @@ def calculate_improvement(previous_rankings, new_rankings_placement, team_name):
 
 def apply_team_objects(team_objects):
 
-    background_photo = cv2.imread("images/scaled_background.png", 1)
+    background_photo = cv2.imread("images/actual_banner_background.png", 1)
     background_photo = cv2.cvtColor(background_photo, cv2.COLOR_RGB2RGBA)
 
     team_locations = [
-        (1378, 10),
-        (1153, 33),
-        (1647, 33)
+        (1939, 10),
+        (1820, 28),
+        (2079, 28)
     ]
 
     team_iterator = 0
@@ -75,13 +75,13 @@ def apply_team_objects(team_objects):
 
         # Set the next 11 images with a formula
         elif (team_iterator >= 3 and team_iterator < 14):
-            x_offset = 231 + (team_iterator - 3) * 236
-            y_offset = 158
+            x_offset = 1433 + (team_iterator - 3) * 105
+            y_offset = 90
 
         # Set the last 11 images with a formula
         else:
-            x_offset = 231 + (team_iterator - 14) * 236
-            y_offset = 275
+            x_offset = 1433 + (team_iterator - 14) * 105
+            y_offset = 140
 
         team_photo = team_objects[team_iterator].team_image.team_placement_image
 
@@ -116,15 +116,13 @@ def apply_team_objects(team_objects):
 
 def apply_subreddit_logo(banner):
     # Use pillow to import a custom font for the text
-
-
     pil_image = Image.fromarray(banner)
 
     txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
     draw = ImageDraw.Draw(txt_image)
-    font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
-    position1 = (455, 40)
-    position2 = (2150, 40)
+    font = ImageFont.truetype("data/Apex_Regular.otf", size=40)
+    position1 = (1478, 25)
+    position2 = (2238, 25)
     draw.text(position1, "r/CompetitiveApex" , font=font, fill=(255, 255, 255, 255))
     draw.text(position2, "Power Rankings" , font=font, fill=(255, 255, 255, 255))
 

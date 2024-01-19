@@ -3,7 +3,7 @@ Created by: Riley Preator
 Created on: 11/05/2023
 Last modified on: 1/18/2024
 """
-
+from controllers.image_operations import image_resize
 from imports.imports import Image, ImageFont, ImageDraw
 from imports.imports import cv2
 from imports.imports import np
@@ -96,9 +96,12 @@ class TeamImage:
 
         # Resize the image if the team is in the top 3
         if (self.rank > 3):
-            team_image = self.resize_image(team_image, 0.89)
+            team_image = self.resize_image(team_image, 0.4)
+        elif (self.rank == 2 or self.rank == 3):
+            team_image = self.resize_image(team_image, 0.5)
         elif (self.rank == 1):
-            team_image = self.resize_image(team_image, 1.2)
+            team_image = self.resize_image(team_image, 0.6)
+
 
 
 
