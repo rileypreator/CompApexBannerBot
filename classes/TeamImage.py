@@ -66,7 +66,7 @@ class TeamImage:
             raise FileNotFoundError(f"Image not found: {self.team_logo_image_path}")
 
         # Create brand new image with grey background
-        color = [89, 88, 87, 255]
+        color = [89, 88, 87, 180]
         blank_image = np.full((self.height, self.width, 4), color, np.uint8)
 
         # Add border to overall image

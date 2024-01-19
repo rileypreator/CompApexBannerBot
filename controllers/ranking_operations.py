@@ -85,9 +85,32 @@ def apply_team_objects(team_objects):
 
         team_photo = team_objects[team_iterator].team_image.team_placement_image
 
-        background_photo[y_offset:y_offset+team_photo.shape[0], x_offset:x_offset+team_photo.shape[1]] = team_photo
+        #  Make sure that the background image doesn't have an alpha channel
+        if background_photo.shape[2] == 4:
+            background_photo = cv2.cvtColor(background_photo, cv2.COLOR_BGRA2BGR)
+        if team_photo.shape[2] != 4:
+            raise Exception("The overlay image must have an alpha channel")
+
+        # Split the overlay into RGB and Alpha channels
+        overlay_rgb = team_photo[..., :3]
+        alpha_mask = team_photo[..., 3]
+
+        y1, y2 = y_offset, y_offset + overlay_rgb.shape[0]
+        x1, x2 = x_offset, x_offset + overlay_rgb.shape[1]
+
+        # Adjust alpha_mask and background for broadcasting
+        alpha_mask = alpha_mask / 255.0
+        alpha_mask = np.expand_dims(alpha_mask, axis=2)
+        background_region = background_photo[y1:y2, x1:x2]
+
+        # Blend the overlay with the background
+        blended_region = (alpha_mask * overlay_rgb) + (1 - alpha_mask) * background_region
+        background_photo[y1:y2, x1:x2] = blended_region
+
+        # Save or display the result
         team_iterator += 1
 
+    background_photo = cv2.cvtColor(background_photo, cv2.COLOR_RGB2RGBA)
     return background_photo
 
 
