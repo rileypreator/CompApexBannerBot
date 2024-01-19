@@ -21,7 +21,10 @@ def create_new_rankings(previous_rankings):
     team_objects = create_team_objects(previous_rankings, new_rankings)
 
     subreddit_banner = apply_team_objects(team_objects)
-    apply_subreddit_logo(subreddit_banner)
+    subreddit_banner = apply_subreddit_logo(subreddit_banner)
+    subreddit_banner = apply_current_week_text(subreddit_banner)
+
+    cv2.imwrite("images/final_background.png", subreddit_banner)
 
 def create_team_objects(previous_rankings, new_rankings):
     # create a list of team objects from the previous rankings
@@ -129,5 +132,19 @@ def apply_subreddit_logo(banner):
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
 
-    cv2.imwrite("images/final_background.png", final_image)
+    return final_image
+
+def apply_current_week_text(banner):
+    # Use pillow to import a custom font for the text
+    pil_image = Image.fromarray(banner)
+
+    txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
+    draw = ImageDraw.Draw(txt_image)
+    font = ImageFont.truetype("data/Apex_Regular.otf", size=10)
+    position1 = (2580, 174)
+    draw.text(position1, "Year 4 Split 1 Week 0" , font=font, fill=(255, 255, 255, 255))
+
+    combined = Image.alpha_composite(pil_image, txt_image)
+    final_image = np.array(combined)
+
     return final_image

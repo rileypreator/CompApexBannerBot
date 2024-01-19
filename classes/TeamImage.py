@@ -87,10 +87,10 @@ class TeamImage:
         team_image = self.add_team_image(placement_image)
 
         # Add team name to image if the team doesn't have a logo or if they are the top three, then add it with a color
-        if self.rank <= 3:
-            team_image = self.add_team_name(team_image, True)
-        elif not self.has_team_logo:
-            team_image = self.add_team_name(team_image, False)
+        # if self.rank <= 3:
+        #     team_image = self.add_team_name(team_image, True)
+        # elif not self.has_team_logo:
+        #     team_image = self.add_team_name(team_image, False)
 
         if (self.rank <= 3):
             team_image = self.add_glitter_effect(team_image)
