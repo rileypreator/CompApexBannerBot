@@ -21,4 +21,5 @@ import cv2
 import praw
 import requests
 import json
+import random
 from PIL import Image, ImageDraw, ImageFont

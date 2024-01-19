@@ -8,7 +8,7 @@ from imports.imports import Image, ImageFont, ImageDraw
 from imports.imports import cv2
 from imports.imports import np
 from imports.imports import os
-
+from imports.imports import random
 
 """
 A class representing an image for a team in a competition.
@@ -66,7 +66,14 @@ class TeamImage:
             raise FileNotFoundError(f"Image not found: {self.team_logo_image_path}")
 
         # Create brand new image with grey background
-        color = [89, 88, 87, 180]
+        if self.rank == 1:
+            color = (212, 175, 55, 180)
+        elif self.rank == 2:
+            color = (192, 192, 192, 180)
+        elif self.rank == 3:
+            color = (95, 81, 55, 180)
+        else:
+            color = [89, 88, 87, 180]
         blank_image = np.full((self.height, self.width, 4), color, np.uint8)
 
         # Add border to overall image
@@ -78,13 +85,22 @@ class TeamImage:
         # Add team logo to image
         team_image = self.add_team_image(placement_image)
 
-        # Add team name to image if the team doesn't have a logo
-        if not self.has_team_logo:
-            team_image = self.add_team_name(team_image)
+        # Add team name to image if the team doesn't have a logo or if they are the top three, then add it with a color
+        if self.rank <= 3:
+            team_image = self.add_team_name(team_image, True)
+        elif not self.has_team_logo:
+            team_image = self.add_team_name(team_image, False)
+
+        if (self.rank <= 3):
+            team_image = self.add_glitter_effect(team_image)
 
         # Resize the image if the team is in the top 3
         if (self.rank > 3):
             team_image = self.resize_image(team_image, 0.89)
+        elif (self.rank == 1):
+            team_image = self.resize_image(team_image, 1.2)
+
+
 
         cv2.imwrite("images/team_placement_images/" + self.team_Abrv + "_placement.png", team_image)
         return team_image
@@ -178,12 +194,23 @@ class TeamImage:
 
         txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt_image)
-        font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
+
+        y = 0
+        if (self.rank == 1):
+            font = ImageFont.truetype("data/Apex_Regular.otf", size=85)
+            y = 15
+        elif (self.rank == 2 or self.rank == 3):
+            font = ImageFont.truetype("data/Apex_Regular.otf", size=76)
+            y = 20
+        else:
+            font = ImageFont.truetype("data/Apex_Regular.otf", size=60)
+            y = 25
 
         text = str(self.rank)
         text_width = font.getmask(text).getbbox()[2]
+        x = 50 - int((text_width / 2))
 
-        draw.text((50 - int((text_width / 2)), 25), str(self.rank), font=font, fill=(255, 255, 255, 255))
+        draw.text((x, y), str(self.rank), font=font, fill=(255, 255, 255, 255))
 
         combined = Image.alpha_composite(pil_image, txt_image)
         final_image = np.array(combined)
@@ -193,6 +220,7 @@ class TeamImage:
 
         return final_image
 
+    # resize the image based on the passed percentage
     def resize_image(self, image, percent):
         new_width = int(image.shape[1] * percent)
         new_height = int(image.shape[0] * percent)
@@ -203,26 +231,59 @@ class TeamImage:
 
         return resized_image
 
-    def add_team_name(self, image):
+    # add a team name to the image
+    def add_team_name(self, image, top3):
         # Use pillow to import a custom font for the text
 
-        if image.shape[2] < 4:
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
         pil_image = Image.fromarray(image)
 
         txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt_image)
+
         font = ImageFont.truetype("data/Apex_Regular.otf", size=30)
+        fill=(255, 255, 255, 255)
 
         text = self.team_Abrv
         text_width = font.getmask(text).getbbox()[2]
 
-        draw.text((140 - int((text_width / 2)), 55), text, font=font, fill=(255, 255, 255, 255))
+        outline_width = 2
+        outline_color = "black"
+
+        x = 140 - int((text_width / 2))
+        y = 55
+        if top3:
+            for adj in range(outline_width):
+                # Move right
+                draw.text((x - adj, y), text, font=font, fill=outline_color)
+                # Move left
+                draw.text((x + adj, y), text, font=font, fill=outline_color)
+                # Move up
+                draw.text((x, y - adj), text, font=font, fill=outline_color)
+                # Move down
+                draw.text((x, y + adj), text, font=font, fill=outline_color)
+                # Diagonal offsets
+                draw.text((x - adj, y - adj), text, font=font, fill=outline_color)
+                draw.text((x + adj, y + adj), text, font=font, fill=outline_color)
+                draw.text((x - adj, y + adj), text, font=font, fill=outline_color)
+                draw.text((x + adj, y - adj), text, font=font, fill=outline_color)
+
+        draw.text((x, y), text, font=font, fill=fill)
 
         combined = Image.alpha_composite(pil_image, txt_image)
         final_image = np.array(combined)
 
-        if final_image.shape[2] == 4:
-            final_image = cv2.cvtColor(final_image, cv2.COLOR_RGBA2BGRA)
-
         return final_image
+
+    # add a glitter effect to the team image
+    def add_glitter_effect(self, img):
+        intensity = 0.1
+        brightness_factor = 1.7
+
+        result = img.copy()
+
+        for i in range(img.shape[0]):
+            for j in range(img.shape[1]):
+                if random.random() < intensity:
+                    result[i, j] = np.clip(brightness_factor * img[i, j], 0, 255)
+
+        return result

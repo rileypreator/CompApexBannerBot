@@ -60,9 +60,9 @@ def apply_team_objects(team_objects):
     background_photo = cv2.cvtColor(background_photo, cv2.COLOR_RGB2RGBA)
 
     team_locations = [
-        (1400, 10),
-        (1150, 10),
-        (1650, 10)
+        (1378, 10),
+        (1153, 33),
+        (1647, 33)
     ]
 
     team_iterator = 0
@@ -76,12 +76,12 @@ def apply_team_objects(team_objects):
         # Set the next 11 images with a formula
         elif (team_iterator >= 3 and team_iterator < 14):
             x_offset = 231 + (team_iterator - 3) * 236
-            y_offset = 140
+            y_offset = 158
 
         # Set the last 11 images with a formula
         else:
             x_offset = 231 + (team_iterator - 14) * 236
-            y_offset = 260
+            y_offset = 275
 
         team_photo = team_objects[team_iterator].team_image.team_placement_image
 
