@@ -139,23 +139,32 @@ class TeamImage:
         overlay = self.team_logo_image
         background = image
 
+        # Split the rgb and alpha channels of both the overlay and the background
+        overlay_rgb = overlay[..., :3]
+        alpha_overlay = overlay[..., 3] / 255.0
+
+        background_rgb = background[..., :3]
+        alpha_background = background[..., 3] / 255.0
+
         x_offset = 90
         y_offset = 6
-        # Calculate the overlay image region dimensions
-        y1, y2 = y_offset, y_offset + overlay.shape[0]
-        x1, x2 = x_offset, x_offset + overlay.shape[1]
+        y1, y2 = y_offset, y_offset + overlay_rgb.shape[0]
+        x1, x2 = x_offset, x_offset + overlay_rgb.shape[1]
 
-        # Check if the dimensions of the overlay exceed the background dimensions
-        if y2 > background.shape[0] or x2 > background.shape[1]:
-            raise ValueError("Overlay image exceeds background dimensions.")
+        overlay_rgb = overlay_rgb[:min(y2-y1, background_rgb.shape[0]-y1), :min(x2-x1, background_rgb.shape[1]-x1)]
+        alpha_overlay = alpha_overlay[:min(y2-y1, background_rgb.shape[0]-y1), :min(x2-x1, background_rgb.shape[1]-x1)]
 
-        # Extract the alpha channel from the overlay and create an alpha mask
-        alpha_s = overlay[:, :, 3] / 255.0
-        alpha_l = 1.0 - alpha_s
+        # Blend the RGB channels
+        blended_rgb = (alpha_overlay[..., None] * overlay_rgb + (1 - alpha_overlay[..., None]) * background_rgb[y1:y2, x1:x2])
 
-        # Loop over the color channels
-        for c in range(0, 3):
-            background[y1:y2, x1:x2, c] = (alpha_s * overlay[:, :, c] + alpha_l * background[y1:y2, x1:x2, c])
+        # Blend the alpha channels
+        blended_alpha = alpha_overlay + alpha_background[y1:y2, x1:x2] * (1 - alpha_overlay)
+
+        # Combine the blended RGB and alpha channels
+        blended_region = np.dstack((blended_rgb, blended_alpha * 255))
+
+        # Place the blended region back into the background image
+        background[y1:y2, x1:x2] = blended_region
 
         return background
 
