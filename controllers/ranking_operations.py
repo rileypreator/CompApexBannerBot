@@ -121,10 +121,10 @@ def apply_subreddit_logo(banner):
     txt_image = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
     draw = ImageDraw.Draw(txt_image)
     font = ImageFont.truetype("data/Apex_Regular.otf", size=40)
-    position1 = (1478, 25)
+    position1 = (1527, 25)
     position2 = (2238, 25)
-    draw.text(position1, "r/CompetitiveApex" , font=font, fill=(255, 255, 255, 255))
-    draw.text(position2, "Power Rankings" , font=font, fill=(255, 255, 255, 255))
+    draw.text(position1, "Apex Legends" , font=font, fill=(255, 255, 255, 255))
+    draw.text(position2, "World Rankings" , font=font, fill=(255, 255, 255, 255))
 
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
