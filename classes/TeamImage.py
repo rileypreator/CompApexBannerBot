@@ -36,7 +36,7 @@ class TeamImage:
 
     def __init__(self, teamAbrv, improvement, rank):
         self.width = 200
-        self.height = 120
+        self.height = 110
 
         self.teamAbrv = teamAbrv
         self.improvement = improvement
@@ -76,11 +76,11 @@ class TeamImage:
         # Add team logo to image
         team_image = self.add_team_image(placement_image)
 
-        # DEBUGGING
-        # cv2.imshow("Rounded Image", team_image)
-        # cv2.waitKey()
-        cv2.imwrite("images/team_placement_images/" + self.teamAbrv + "_placement.png", team_image)
+        # Resize the image if the team is in the top 3    
+        if (self.rank > 3):
+            team_image = self.resize_image(team_image, 0.9)
 
+        cv2.imwrite("images/team_placement_images/" + self.teamAbrv + "_placement.png", team_image)
         return team_image
 
 
@@ -134,7 +134,7 @@ class TeamImage:
         background = image
 
         x_offset = 90
-        y_offset = 15
+        y_offset = 10
         # Calculate the overlay image region dimensions
         y1, y2 = y_offset, y_offset + overlay_image.shape[0]
         x1, x2 = x_offset, x_offset + overlay_image.shape[1]
@@ -164,8 +164,8 @@ class TeamImage:
 
         txt_image = Image.new('RGBA', pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt_image)
-        font = ImageFont.truetype('data/Apex_Regular.otf', size=50)
-        position = (30, 40)
+        font = ImageFont.truetype('data/Apex_Regular.otf', size=60)
+        position = (30, 30)
 
         draw.text(position, str(self.rank), font=font, fill=(255, 255, 255, 255))
 
@@ -176,3 +176,13 @@ class TeamImage:
             final_image = cv2.cvtColor(final_image, cv2.COLOR_RGBA2BGRA)
 
         return final_image
+    
+    def resize_image(self, image, percent):
+        new_width = int(image.shape[1] * percent)
+        new_height = int(image.shape[0] * percent)
+        new_size = (new_width, new_height)
+
+        # Resize the image
+        resized_image = cv2.resize(image, new_size)
+
+        return resized_image
