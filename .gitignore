@@ -1,4 +1,4 @@
 *.pyc
 /images/team_placement_images
 images/final_background.png
-/data
+data/
