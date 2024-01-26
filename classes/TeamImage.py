@@ -92,6 +92,9 @@ class TeamImage:
         # elif not self.has_team_logo:
         #     team_image = self.add_team_name(team_image, False)
 
+        if not self.has_team_logo:
+            team_image = self.add_team_name(team_image, False)
+
         if (self.rank <= 3):
             team_image = self.add_glitter_effect(team_image)
 
