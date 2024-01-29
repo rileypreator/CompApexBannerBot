@@ -127,7 +127,7 @@ def apply_subreddit_logo(banner):
     position1 = (1527, 25)
     position2 = (2238, 25)
     draw.text(position1, "Apex Legends" , font=font, fill=(255, 255, 255, 255))
-    draw.text(position2, "World Rankings" , font=font, fill=(255, 255, 255, 255))
+    draw.text(position2, "Power Rankings" , font=font, fill=(255, 255, 255, 255))
 
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
