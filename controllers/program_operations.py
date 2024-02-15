@@ -21,14 +21,17 @@ def run_main_operation():
         elif sys.argv[1] == "flair_list":
             api_result = grab_flair_list()
         elif sys.argv[1] == "update_banner":
-            # Get the previous rankings from the previous_scores.json file
-            previous_rankings = get_previous_rankings()
+            if len(sys.argv) == 3:
+                # Get the previous rankings from the previous_scores.json file
+                previous_rankings = get_previous_rankings()
 
-            # Create a new rankings banner
-            create_new_rankings(previous_rankings)
+                # Create a new rankings banner
+                create_new_rankings(previous_rankings)
 
-            # Upload the banner
-            update_banner()
+                # Upload the banner
+                update_banner(sys.argv[2])
+            else:
+                print("Error: Please provide a subreddit name parameter for the banner")
         elif sys.argv[1] == "user_activity":
             grab_user_activity(sys.argv[2])
 

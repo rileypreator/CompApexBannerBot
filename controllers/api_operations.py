@@ -11,6 +11,7 @@ def api_startup(check_stats=False):
 
         # Verify that the session is working with a print message of the Bot's username
         print(reddit.user.me())
+        print("Reddit API is connected. Please operate the program with another script execution")
     except:
         print("Error: Could not connect to Reddit. Check your config file.")
         return "failure"
@@ -60,10 +61,10 @@ def grab_reddit_praw():
 
     return reddit
 
-def update_banner():
+def update_banner(subreddit):
     try:
         reddit = grab_reddit_praw()
-        subreddit = reddit.subreddit("competitiveapex")
+        subreddit = reddit.subreddit(subreddit)
 
         banner_image_path = "./images/final_background.png"
 
@@ -78,9 +79,9 @@ def update_banner():
         return "failure"
 
 
-def grab_flair_list():
+def grab_flair_list(subreddit):
     reddit = grab_reddit_praw()
-    subreddit = reddit.subreddit("competitiveapex")
+    subreddit = reddit.subreddit(subreddit)
 
     flair_list = []
     # Open a file in write mode
@@ -97,9 +98,9 @@ def grab_flair_list():
     print("Array saved to flairlist.txt")
     return flair_list
 
-def grab_user_activity(username):
+def grab_user_activity(username, subreddit):
     reddit = grab_reddit_praw()
-    subreddit = reddit.subreddit("competitiveapex")
+    subreddit = reddit.subreddit(subreddit)
 
     user = reddit.redditor(username)
 
