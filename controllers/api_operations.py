@@ -1,11 +1,11 @@
 """
 Created by: Riley Preator
 Created on: 11/05/2023
-Last modified on: 1/29/2024
+Last modified on: 3/11/2024
 """
 
 from imports.imports import praw, json, Counter, re, datetime
-def api_startup(check_stats=False):
+def api_startup(subreddit, check_stats=False):
     try:
         reddit = grab_reddit_praw()
 
@@ -16,10 +16,11 @@ def api_startup(check_stats=False):
         print("Error: Could not connect to Reddit. Check your config file.")
         return "failure"
 
-    subreddit = reddit.subreddit("competitiveapex")
-
     if check_stats:
+        print("Checking stats... Please wait a few minutes")
         check_emoji(subreddit)
+    else:
+        print("Ran basic api startup operation. Please check parameters")
 
     return "success"
 
@@ -128,3 +129,68 @@ def grab_user_activity(username, subreddit):
         print(f"Latest activity in r/{subreddit} by u/{username}: {latest_activity_datetime}")
     else:
         print(f"No activity in r/{subreddit} found for u/{username}")
+
+def get_approved_users(subreddit):
+
+    # Get Reddit information
+    reddit = grab_reddit_praw()
+    subreddit = reddit.subreddit(subreddit)
+
+    # Open approved users and check comments
+    with open('data/pin_user_comments.json', 'r') as user_file:
+        users = json.load(user_file)
+
+    # Print list of users that will have comments pinned
+    users = users['approved_users']
+    print("List of comment approved users")
+    for user in users:
+        print(user)
+
+    # Create a stream for the bot to listen to
+    for comment in subreddit.stream.comments(skip_existing=True):
+        # If the comment is written by an approved user proceed to add it to the pinned comment
+        if comment.author.name in users:
+            print(f"User {comment.author.name} commented.")
+
+            submission = comment.submission
+
+            # Iterate through submission's comments to see if there is already a pinned comment by the bot
+            pinned_comment_found = False
+            for bot_comment in submission.comments:
+                if bot_comment.author.name == "CompApexBot":
+                    pinned_comment_found = True
+                    pinned_comment = bot_comment.body
+                    pinned_comment += "\n"
+                    pinned_comment += write_pinned_comment(comment)
+                    bot_comment.edit(pinned_comment)
+                    print("Posted comment")
+                    print(pinned_comment)
+                    break
+                else:
+                    new_comment = "This is a list of the comments made by Respawn Developers. Click on each comment's appropriate link to go the corresponding thread.\n"
+                    new_comment += write_pinned_comment(comment)
+                    submitted_comment = submission.reply(new_comment)
+                    submitted_comment.mod.distinguish(sticky=True)
+                    submitted_comment.mod.lock()
+                    print("Posted comment")
+                    print(new_comment)
+
+
+def write_pinned_comment(comment):
+    # Write and link to the original comment by the user
+    written_by_comment = "* [Comment by "
+    written_by_comment += comment.author.name
+    written_by_comment += "]("
+    written_by_comment += comment.permalink
+    written_by_comment += "):\n"
+
+    # Quote the response here
+    comment_body = "> "
+    comment_body += comment.body
+    comment_body += "\n"
+
+    entire_comment = written_by_comment
+    entire_comment += comment_body
+    entire_comment += "\n"
+
+    return entire_comment
