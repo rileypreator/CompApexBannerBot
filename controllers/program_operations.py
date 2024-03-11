@@ -9,15 +9,15 @@ from imports.imports import cv2
 from imports.imports import json
 from imports.imports import sys
 from controllers.ranking_operations import create_new_rankings
-from controllers.api_operations import api_startup, update_banner, grab_flair_list, grab_user_activity
+from controllers.api_operations import *
 
 def run_main_operation():
     startup()
 
     # Check for system arguments to get the stats of the subreddit and verify the Reddit API is working
-    if len(sys.argv) >= 2:
+    if len(sys.argv) >= 3:
         if sys.argv[1] == "stats":
-            api_result = api_startup(True)
+            api_result = api_startup(sys.argv[2], True)
         elif sys.argv[1] == "flair_list":
             api_result = grab_flair_list()
         elif sys.argv[1] == "update_banner":
@@ -34,7 +34,8 @@ def run_main_operation():
                 print("Error: Please provide a subreddit name parameter for the banner")
         elif sys.argv[1] == "user_activity":
             grab_user_activity(sys.argv[2])
-
+        elif sys.argv[1] == "pin_comments":
+            api_result = get_approved_users(sys.argv[2])
         else:
             api_result = api_startup(False)
     else:
