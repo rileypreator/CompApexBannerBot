@@ -152,19 +152,19 @@ def get_approved_users(subreddit):
         if comment.author.name in users:
             print(f"User {comment.author.name} commented.")
 
-            submission = comment.submission
 
             # Iterate through submission's comments to see if there is already a pinned comment by the bot
             pinned_comment_found = False
             for bot_comment in submission.comments:
                 if bot_comment.author.name == "CompApexBot":
-                    pinned_comment_found = True
                     pinned_comment = bot_comment.body
                     pinned_comment += "\n"
                     pinned_comment += write_pinned_comment(comment)
                     bot_comment.edit(pinned_comment)
+
                     print("Posted comment")
                     print(pinned_comment)
+
                     break
                 else:
                     new_comment = "This is a list of the comments made by Respawn Developers. Click on each comment's appropriate link to go the corresponding thread.\n"
@@ -172,9 +172,16 @@ def get_approved_users(subreddit):
                     submitted_comment = submission.reply(new_comment)
                     submitted_comment.mod.distinguish(sticky=True)
                     submitted_comment.mod.lock()
+
                     print("Posted comment")
                     print(new_comment)
 
+                    # Change post's flair to be the Developer Response
+                    submission = comment.submission
+                    flairs = submission.flair.choices()
+                    flair_id = get_dev_flair(flairs)
+                    print("Adding dev flair: " + flair_id)
+                    submission.flair.select(flair_id)
 
 def write_pinned_comment(comment):
     # Write and link to the original comment by the user
@@ -194,3 +201,9 @@ def write_pinned_comment(comment):
     entire_comment += "\n"
 
     return entire_comment
+
+def get_dev_flair(flairs):
+    for flair in flairs:
+        flair_string = flair["flair_text"]
+        if flair_string.startswith("Dev"):
+            return flair["flair_template_id"]
