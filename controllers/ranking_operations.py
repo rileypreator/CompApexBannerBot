@@ -127,7 +127,7 @@ def apply_subreddit_logo(banner):
     position1 = (1527, 25)
     position2 = (2238, 25)
     draw.text(position1, "Apex Legends" , font=font, fill=(255, 255, 255, 255))
-    draw.text(position2, "Power Rankings" , font=font, fill=(255, 255, 255, 255))
+    draw.text(position2, "World Rankings" , font=font, fill=(255, 255, 255, 255))
 
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
@@ -142,7 +142,7 @@ def apply_current_week_text(banner):
     draw = ImageDraw.Draw(txt_image)
     font = ImageFont.truetype("data/Apex_Regular.otf", size=10)
     position1 = (2580, 174)
-    draw.text(position1, "Year 4 Split 1 Week 3" , font=font, fill=(255, 255, 255, 255))
+    draw.text(position1, "Year 4 Split 1 Week 5" , font=font, fill=(255, 255, 255, 255))
 
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
