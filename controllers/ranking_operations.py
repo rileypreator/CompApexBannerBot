@@ -142,9 +142,46 @@ def apply_current_week_text(banner):
     draw = ImageDraw.Draw(txt_image)
     font = ImageFont.truetype("data/Apex_Regular.otf", size=10)
     position1 = (2580, 174)
-    draw.text(position1, "Year 4 Split 1 Week 5" , font=font, fill=(255, 255, 255, 255))
+
+    currentSplit= prompt_user_input("What split of Pro League is it? ", 2)
+    currentWeek = prompt_user_input("What week of Pro League is it? ", 2)
+    date_definition_text = "Year 4 Split " + str(int(currentSplit)) + " Week " + str(int(currentWeek))
+
+    draw.text(position1, date_definition_text , font=font, fill=(255, 255, 255, 255))
 
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
 
     return final_image
+
+def prompt_user_input(input_string, input_type=1):
+    # prompt a user based on the input string provided from parameters
+    # type 1 = boolean
+    # type 2 = number
+    if (input_type == 1):
+        invalid_response = True
+
+        while(invalid_response):
+            input_string = input_string + " (Y or N):"
+            boolean_input = input(input_string)
+
+            if (boolean_input == "Y" or boolean_input == "N"):
+                invalid_response = False
+                if (boolean_input == "Y"):
+                    return True
+                elif (boolean_input == "N"):
+                    return False
+            else:
+                print("Please return a valid response Prompting again")
+
+    elif (input_type == 2):
+        invalid_response = True
+
+        while(invalid_response):
+            number_input = input(input_string)
+
+            if (number_input.isnumeric()):
+                invalid_response = False
+                return float(number_input)
+            else:
+                print("Please return a valid response Prompting again")
