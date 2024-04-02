@@ -73,8 +73,8 @@ def update_banner(subreddit):
             banner_url = subreddit.stylesheet.upload_banner("images/final_background.png")
 
     # Update the subreddit's banner using the uploaded image URL
-        subreddit.mod.update(banner=banner_url)
         print("Banner updated!")
+        
     except:
         print("Error: Could not connect to Reddit. Check your config file.")
         return "failure"
