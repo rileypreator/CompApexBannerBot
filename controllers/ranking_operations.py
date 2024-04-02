@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 12/14/2023
-Last modified on: 1/18/2024
+Last modified on: 4/2/2024
 """
 from classes.TeamPlace import TeamPlace
 from classes.Team import Team
@@ -25,6 +25,7 @@ def create_new_rankings(previous_rankings):
     subreddit_banner = apply_current_week_text(subreddit_banner)
 
     cv2.imwrite("images/final_background.png", subreddit_banner)
+    cv2.imwrite("images/final_background_old.png", resize_image_width(subreddit_banner, 3000))
 
 def create_team_objects(previous_rankings, new_rankings):
     # create a list of team objects from the previous rankings
@@ -185,3 +186,12 @@ def prompt_user_input(input_string, input_type=1):
                 return float(number_input)
             else:
                 print("Please return a valid response Prompting again")
+
+def resize_image_width(image, desired_width):
+    height, width = image.shape[:2]
+    
+    ratio = desired_width / width
+    new_height = int(height * ratio)
+
+    resized_image = cv2.resize(image, (desired_width, new_height))
+    return resized_image
