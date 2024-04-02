@@ -71,9 +71,11 @@ def update_banner(subreddit):
 
         with open(banner_image_path, "rb") as image:
             banner_url = subreddit.stylesheet.upload_banner("images/final_background.png")
-            old_banner_url = subreddit.stylesheet.upload(name="final-background", image_path="images/final_background.png")
+            old_banner_url = subreddit.stylesheet.upload(name="final-background", image_path="images/final_background_old.png")
 
     # Update the subreddit's banner using the uploaded image URL
+        current_stylesheet = subreddit.stylesheet()
+        subreddit.stylesheet.update(current_stylesheet.stylesheet)
         print("Banner updated!")
 
     except Exception as e:
