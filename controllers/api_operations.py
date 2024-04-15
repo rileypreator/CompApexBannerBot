@@ -156,6 +156,7 @@ def get_approved_users(subreddit):
         if comment.author.name in users:
             print(f"User {comment.author.name} commented.")
 
+            submission = comment.submission
 
             # Iterate through submission's comments to see if there is already a pinned comment by the bot
             pinned_comment_found = False
