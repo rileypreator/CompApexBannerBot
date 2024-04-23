@@ -152,7 +152,6 @@ def get_approved_users(subreddit):
         print(user)
 
     # Create a stream for the bot to listen to
-    
     for comment in subreddit.stream.comments(skip_existing=True):
         # If the comment is written by an approved user proceed to add it to the pinned comment
         if comment.author.name in users:
@@ -166,6 +165,8 @@ def get_approved_users(subreddit):
             for bot_comment in submission.comments:
                 if bot_comment.author.name == "CompApexBot" and bot_comment.author:
                     pinned_comment_found = True
+
+                    # Get the current comment and add a new line to append to the pinned comment
                     pinned_comment = bot_comment.body
                     pinned_comment += "\n"
                     pinned_comment += write_pinned_comment(comment)
@@ -175,7 +176,7 @@ def get_approved_users(subreddit):
                     print(pinned_comment)
 
                     break
-            
+            # If there isn't a comment pinned by the bot, create one
             if not pinned_comment_found:
                 new_comment = "This is a list of the comments made by Respawn Developers. Click on each comment's appropriate link to go the corresponding thread.\n\n"
                 new_comment += write_pinned_comment(comment)
