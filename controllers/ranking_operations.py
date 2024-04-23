@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 12/14/2023
-Last modified on: 4/2/2024
+Last modified on: 4/23/2024
 """
 from classes.TeamPlace import TeamPlace
 from classes.Team import Team
@@ -187,6 +187,7 @@ def prompt_user_input(input_string, input_type=1):
             else:
                 print("Please return a valid response Prompting again")
 
+# Resize any image with a defined width as passed through the parameters
 def resize_image_width(image, desired_width):
     height, width = image.shape[:2]
     

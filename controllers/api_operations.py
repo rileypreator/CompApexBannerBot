@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 11/05/2023
-Last modified on: 3/11/2024
+Last modified on: 4/23/2024
 """
 
 from imports.imports import praw, json, Counter, re, datetime
@@ -69,8 +69,9 @@ def update_banner(subreddit):
 
         banner_image_path = "./images/final_background.png"
 
+        # Upload the banner for both new Reddit (first), then old Reddit (second)
         with open(banner_image_path, "rb") as image:
-            banner_url = subreddit.stylesheet.upload_banner("images/final_background.png")
+            new_banner_url = subreddit.stylesheet.upload_banner("images/final_background.png")
             old_banner_url = subreddit.stylesheet.upload(name="final-background", image_path="images/final_background_old.png")
 
     # Update the subreddit's banner using the uploaded image URL
@@ -151,42 +152,46 @@ def get_approved_users(subreddit):
         print(user)
 
     # Create a stream for the bot to listen to
+    
     for comment in subreddit.stream.comments(skip_existing=True):
         # If the comment is written by an approved user proceed to add it to the pinned comment
         if comment.author.name in users:
             print(f"User {comment.author.name} commented.")
 
             submission = comment.submission
+            submission.comments.replace_more(limit=0)  # Load all comments
 
-            # Iterate through submission's comments to see if there is already a pinned comment by the bot
             pinned_comment_found = False
+            # Iterate through submission's comments to see if there is already a pinned comment by the bot
             for bot_comment in submission.comments:
-                if bot_comment.author.name == "CompApexBot":
+                if bot_comment.author.name == "CompApexBot" and bot_comment.author:
+                    pinned_comment_found = True
                     pinned_comment = bot_comment.body
                     pinned_comment += "\n"
                     pinned_comment += write_pinned_comment(comment)
                     bot_comment.edit(pinned_comment)
 
-                    print("Posted comment")
+                    print("Posted edited comment")
                     print(pinned_comment)
 
                     break
-                else:
-                    new_comment = "This is a list of the comments made by Respawn Developers. Click on each comment's appropriate link to go the corresponding thread.\n"
-                    new_comment += write_pinned_comment(comment)
-                    submitted_comment = submission.reply(new_comment)
-                    submitted_comment.mod.distinguish(sticky=True)
-                    submitted_comment.mod.lock()
+            
+            if not pinned_comment_found:
+                new_comment = "This is a list of the comments made by Respawn Developers. Click on each comment's appropriate link to go the corresponding thread.\n\n"
+                new_comment += write_pinned_comment(comment)
+                submitted_comment = submission.reply(new_comment)
+                submitted_comment.mod.distinguish(sticky=True)
+                submitted_comment.mod.lock()
 
-                    print("Posted comment")
-                    print(new_comment)
+                print("Posted new comment")
+                print(new_comment)
 
-                    # Change post's flair to be the Developer Response
-                    submission = comment.submission
-                    flairs = submission.flair.choices()
-                    flair_id = get_dev_flair(flairs)
-                    print("Adding dev flair: " + flair_id)
-                    submission.flair.select(flair_id)
+                # Change post's flair to be the Developer Response
+                submission = comment.submission
+                flairs = submission.flair.choices()
+                flair_id = get_dev_flair(flairs)
+                print("Adding dev flair: " + flair_id)
+                submission.flair.select(flair_id)
 
 def write_pinned_comment(comment):
     # Write and link to the original comment by the user
@@ -203,7 +208,7 @@ def write_pinned_comment(comment):
 
     entire_comment = written_by_comment
     entire_comment += comment_body
-    entire_comment += "\n"
+    entire_comment += "\n&nbsp;"
 
     return entire_comment
 
