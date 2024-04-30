@@ -144,11 +144,18 @@ def apply_current_week_text(banner):
     font = ImageFont.truetype("data/Apex_Regular.otf", size=10)
     position1 = (2580, 174)
 
-    currentSplit= prompt_user_input("What split of Pro League is it? ", 2)
-    currentWeek = prompt_user_input("What week of Pro League is it? ", 2)
-    date_definition_text = "Year 4 Split " + str(int(currentSplit)) + " Week " + str(int(currentWeek))
+    # Prompt for custom subtext, and if not, ask for standard split and week of Pro League
+    description_text = ""
+    customText = prompt_user_input("Would you like to have custom subtext?", 1)
 
-    draw.text(position1, date_definition_text , font=font, fill=(255, 255, 255, 255))
+    if customText != True:
+        currentSplit= prompt_user_input("What split of Pro League is it? ", 2)
+        currentWeek = prompt_user_input("What week of Pro League is it? ", 2)
+        description_text = "Year 4 Split " + str(int(currentSplit)) + " Week " + str(int(currentWeek))
+    else:
+        description_text = prompt_user_input("What would you like the custom text to be?", 3)
+
+    draw.text(position1, description_text , font=font, fill=(255, 255, 255, 255))
 
     combined = Image.alpha_composite(pil_image, txt_image)
     final_image = np.array(combined)
@@ -159,12 +166,12 @@ def prompt_user_input(input_string, input_type=1):
     # prompt a user based on the input string provided from parameters
     # type 1 = boolean
     # type 2 = number
+    # type 3 = string
     if (input_type == 1):
         invalid_response = True
 
         while(invalid_response):
-            input_string = input_string + " (Y or N):"
-            boolean_input = input(input_string)
+            boolean_input = input(input_string + " (Y or N):")
 
             if (boolean_input == "Y" or boolean_input == "N"):
                 invalid_response = False
@@ -186,6 +193,9 @@ def prompt_user_input(input_string, input_type=1):
                 return float(number_input)
             else:
                 print("Please return a valid response Prompting again")
+    
+    elif (input_type == 3):
+        return input(input_string + " ")
 
 # Resize any image with a defined width as passed through the parameters
 def resize_image_width(image, desired_width):
