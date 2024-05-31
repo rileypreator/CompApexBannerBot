@@ -3,7 +3,7 @@ Created by: Riley Preator
 Created on: 11/05/2023
 Last modified on: 1/18/2024
 """
-from controllers.image_operations import image_resize
+from controllers.image_operations import image_resize, team_image_resize
 from imports.imports import Image, ImageFont, ImageDraw
 from imports.imports import cv2
 from imports.imports import np
@@ -49,7 +49,11 @@ class TeamImage:
             self.team_logo_image_path = "images/team_images/default_team_logo.png"
             self.has_team_logo = False
 
+        # Read the image and if it is too large (bigger than 100px on either side) resize it
         self.team_logo_image = cv2.imread(self.team_logo_image_path, cv2.IMREAD_UNCHANGED)
+
+        if (self.team_logo_image.shape[0] > 100 or self.team_logo_image.shape[1] > 100):
+            self.team_logo_image = team_image_resize(self.team_logo_image)
 
         # Create the team image
         self.team_placement_image = self.generate_image()
@@ -83,7 +87,6 @@ class TeamImage:
         placement_image = self.add_placement_text(rounded_image)
 
         # Add team logo to image
-
         team_image = self.add_team_image(placement_image)
 
         # Add team name to image if the team doesn't have a logo or if they are the top three, then add it with a color

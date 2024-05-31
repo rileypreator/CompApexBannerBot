@@ -37,3 +37,21 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
 
     # return the resized image
     return resized
+
+def team_image_resize(image):
+    (height, width) = image.shape[:2]
+    ratio = 0
+    
+    if (height >= width):
+        ratio = width / height
+        dimensions = (int(100 * ratio), 100)
+
+        resized_image = cv2.resize(image, dimensions, interpolation=cv2.INTER_AREA)
+    else:
+        ratio = height / width
+        dimensions = (100, int(100 * ratio))
+
+        resized_image = cv2.resize(image, dimensions, interpolation=cv2.INTER_AREA)
+        
+    return resized_image
+    
