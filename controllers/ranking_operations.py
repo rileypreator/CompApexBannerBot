@@ -39,7 +39,8 @@ def create_team_objects(previous_rankings, new_rankings):
 
         # Make a team place object that can be used to track the team's placement and then create a Team object with that team place object
         team_place = TeamPlace(new_rankings_list[team_iterator]["team_name"], new_rankings_list[team_iterator]["team_name"], new_rankings_list[team_iterator]["placement"], new_rankings_list[team_iterator]["score"], improvement)
-        team_objects.append(Team(team_place))
+        team_object = Team(team_place)
+        team_objects.append(team_object)
 
         # iterate through the loop with the team_iterator object
         team_iterator += 1
