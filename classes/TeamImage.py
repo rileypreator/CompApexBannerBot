@@ -54,6 +54,7 @@ class TeamImage:
 
         if (self.team_logo_image.shape[0] > 100 or self.team_logo_image.shape[1] > 100):
             self.team_logo_image = team_image_resize(self.team_logo_image)
+            cv2.imwrite(self.team_logo_image_path, self.team_logo_image)
 
         # Create the team image
         self.team_placement_image = self.generate_image()
