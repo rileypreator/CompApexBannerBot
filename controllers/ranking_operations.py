@@ -10,8 +10,12 @@ from imports.imports import json
 from imports.imports import cv2
 from imports.imports import Image, ImageFont, ImageDraw
 from imports.imports import np
+from controllers.image_operations import resize_image_width
+import requests
 
 def create_new_rankings(previous_rankings):
+
+    kp_get_active_list()
     # create a new rankings list. For testing purposes. The teams will be generated just through the sample json right now
     # However, once the API to receive the new rankings is created, this will be changed to use that API
     new_rankings = []
@@ -198,12 +202,38 @@ def prompt_user_input(input_string, input_type=1):
     elif (input_type == 3):
         return input(input_string + " ")
 
-# Resize any image with a defined width as passed through the parameters
-def resize_image_width(image, desired_width):
-    height, width = image.shape[:2]
-    
-    ratio = desired_width / width
-    new_height = int(height * ratio)
+# function to get the active list from the kp poll website
+def kp_get_active_list():
+    year = prompt_user_input("What year of Pro League is this?", 3)
+    split = prompt_user_input("What split of Pro League is this?", 3)
+    week = prompt_user_input("What week of Pro League is this?", 3)
 
-    resized_image = cv2.resize(image, (desired_width, new_height))
-    return resized_image
+    request_url = 'https://kppoll.com/data.php?week=Y' + year + 'S' + split + 'W' + week
+    try:
+        # Make the API Call
+        response = requests.get(request_url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse the JSON response
+        data = response.json()
+        print(data)
+        if 'Rankings' in data:
+            new_Rankings = data['Rankings']
+            new_Rankings = new_Rankings.split(',')
+            print(new_Rankings)
+
+        # Retreive the old JSON file
+        with open("data/current_scores.json") as file:
+            old_rankings = json.load(file)
+        
+        # Write the new JSON
+        for i in range(25):
+            old_rankings['teams'][i]['team_name'] = new_Rankings[i]
+        print(old_rankings)
+
+        # Save it to the file
+        with open("data/current_scores.json", 'w') as file:
+            json.dump(old_rankings, file, indent=4)
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while fetching data from the API: {e}")

@@ -17,7 +17,7 @@ def run_main_operation():
     # Check for system arguments to get the stats of the subreddit and verify the Reddit API is working
     if len(sys.argv) >= 3:
         if sys.argv[1] == "stats":
-            api_result = api_startup(sys.argv[2], True)
+            api_result = reddit_api_startup(sys.argv[2], True)
         elif sys.argv[1] == "flair_list":
             api_result = grab_flair_list()
         elif sys.argv[1] == "update_banner":
@@ -37,9 +37,9 @@ def run_main_operation():
         elif sys.argv[1] == "pin_comments":
             api_result = get_approved_users(sys.argv[2])
         else:
-            api_result = api_startup(False)
+            api_result = reddit_api_startup(False)
     else:
-        api_result = api_startup(False)
+        api_result = reddit_api_startup(False)
 
 def startup():
     # create a BannerImage object and verify the file size

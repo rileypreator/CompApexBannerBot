@@ -54,4 +54,14 @@ def team_image_resize(image):
         resized_image = cv2.resize(image, dimensions, interpolation=cv2.INTER_AREA)
         
     return resized_image
+
+# Resize any image with a defined width as passed through the parameters
+def resize_image_width(image, desired_width):
+    height, width = image.shape[:2]
+    
+    ratio = desired_width / width
+    new_height = int(height * ratio)
+
+    resized_image = cv2.resize(image, (desired_width, new_height))
+    return resized_image
     

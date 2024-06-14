@@ -5,7 +5,7 @@ Last modified on: 4/23/2024
 """
 
 from imports.imports import praw, json, Counter, re, datetime
-def api_startup(subreddit, check_stats=False):
+def reddit_api_startup(subreddit, check_stats=False):
     try:
         reddit = grab_reddit_praw()
 
