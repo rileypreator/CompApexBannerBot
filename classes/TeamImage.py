@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 11/05/2023
-Last modified on: 1/18/2024
+Last modified on: 6/13/2024
 """
 from controllers.image_operations import image_resize, team_image_resize
 from imports.imports import Image, ImageFont, ImageDraw
@@ -162,11 +162,29 @@ class TeamImage:
 
         return alpha_image
 
-    # add team logo to the image
-    def add_team_image(self, image):
+        # add team logo to the image
+    def add_alpha_channel(self, image):
+        """
+        Adds an alpha channel to an image if it does not already have one.
+        
+        Parameters:
+        image (numpy.ndarray): The input image.
+        
+        Returns:
+        numpy.ndarray: The image with an alpha channel.
+        """
+        if image.shape[2] == 3:  # If image has no alpha channel
+            alpha_channel = np.full((image.shape[0], image.shape[1], 1), 255, dtype=image.dtype)
+            image = np.concatenate((image, alpha_channel), axis=2)
+        return image
 
+    def add_team_image(self, image):
         overlay = self.team_logo_image
         background = image
+
+        # Ensure both images have an alpha channel
+        overlay = self.add_alpha_channel(overlay)
+        background = self.add_alpha_channel(background)
 
         # Split the rgb and alpha channels of both the overlay and the background
         overlay_rgb = overlay[..., :3]

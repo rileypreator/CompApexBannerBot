@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 12/14/2023
-Last modified on: 4/23/2024
+Last modified on: 6/13/2024
 """
 from classes.TeamPlace import TeamPlace
 from classes.Team import Team
@@ -15,7 +15,10 @@ import requests
 
 def create_new_rankings(previous_rankings):
 
-    kp_get_active_list()
+    new_list = prompt_user_input("Do you want to request a new list?", 1)
+    if new_list:
+        kp_get_active_list()
+
     # create a new rankings list. For testing purposes. The teams will be generated just through the sample json right now
     # However, once the API to receive the new rankings is created, this will be changed to use that API
     new_rankings = []
@@ -216,11 +219,9 @@ def kp_get_active_list():
 
         # Parse the JSON response
         data = response.json()
-        print(data)
         if 'Rankings' in data:
             new_Rankings = data['Rankings']
             new_Rankings = new_Rankings.split(',')
-            print(new_Rankings)
 
         # Retreive the old JSON file
         with open("data/current_scores.json") as file:
@@ -229,7 +230,6 @@ def kp_get_active_list():
         # Write the new JSON
         for i in range(25):
             old_rankings['teams'][i]['team_name'] = new_Rankings[i]
-        print(old_rankings)
 
         # Save it to the file
         with open("data/current_scores.json", 'w') as file:

@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 11/05/2023
-Last modified on: 1/29/2024
+Last modified on: 6/13/2024
 """
 
 from classes.BannerImage import BannerImage
@@ -44,7 +44,6 @@ def run_main_operation():
 def startup():
     # create a BannerImage object and verify the file size
     banner_image = BannerImage()
-    print("Banner sizes:", banner_image.width, " x ", banner_image.height)
 
 
 def get_previous_rankings():

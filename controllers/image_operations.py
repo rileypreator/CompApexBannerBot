@@ -1,7 +1,7 @@
 """
 Created by: Riley Preator
 Created on: 11/05/2023
-Last modified on: 1/18/2024
+Last modified on: 6/13/2024
 """
 
 import cv2
@@ -42,15 +42,15 @@ def team_image_resize(image):
     (height, width) = image.shape[:2]
     ratio = 0
     
-    if (height >= width):
+    if (height == 100 and width == 100):
+        resized_image = cv2.resize(image, (99,99), interpolation=cv2.INTER_AREA)
+    elif (height >= width):
         ratio = width / height
         dimensions = (int(100 * ratio), 100)
-
         resized_image = cv2.resize(image, dimensions, interpolation=cv2.INTER_AREA)
     else:
         ratio = height / width
         dimensions = (100, int(100 * ratio))
-
         resized_image = cv2.resize(image, dimensions, interpolation=cv2.INTER_AREA)
         
     return resized_image
