@@ -180,7 +180,8 @@ def prompt_user_input(input_string, input_type=1):
 
         while(invalid_response):
             boolean_input = input(input_string + " (Y or N):")
-
+            boolean_input = boolean_input.upper()
+            
             if (boolean_input == "Y" or boolean_input == "N"):
                 invalid_response = False
                 if (boolean_input == "Y"):
